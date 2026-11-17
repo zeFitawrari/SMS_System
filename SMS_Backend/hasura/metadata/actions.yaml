@@ -1,0 +1,417 @@
+actions:
+  - name: RegisterSchool
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/register-school'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: PROVIDER_ADMIN
+      - role: SUPER_PROVIDER_ADMIN
+  - name: Login
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/login'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: anonymous
+  - name: RefreshSession
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/refresh'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: anonymous
+  - name: Logout
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/logout'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: anonymous
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: FINANCE
+      - role: TEACHER
+      - role: STUDENT
+      - role: PARENT
+      - role: LIBRARIAN
+      - role: RECEPTIONIST
+      - role: SCHOOL_STAFF
+  - name: ListMySessions
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/list-my-sessions'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: FINANCE
+      - role: TEACHER
+      - role: STUDENT
+      - role: PARENT
+      - role: LIBRARIAN
+      - role: RECEPTIONIST
+      - role: SCHOOL_STAFF
+  - name: RevokeSession
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/revoke-session'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: FINANCE
+      - role: TEACHER
+      - role: STUDENT
+      - role: PARENT
+      - role: LIBRARIAN
+      - role: RECEPTIONIST
+      - role: SCHOOL_STAFF
+  - name: RevokeOtherSessions
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/revoke-other-sessions'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: FINANCE
+      - role: TEACHER
+      - role: STUDENT
+      - role: PARENT
+      - role: LIBRARIAN
+      - role: RECEPTIONIST
+      - role: SCHOOL_STAFF
+  - name: ListMyContexts
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/list-my-contexts'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: FINANCE
+      - role: TEACHER
+      - role: STUDENT
+      - role: PARENT
+      - role: LIBRARIAN
+      - role: RECEPTIONIST
+      - role: SCHOOL_STAFF
+  - name: SelectContext
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/select-context'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: FINANCE
+      - role: TEACHER
+      - role: STUDENT
+      - role: PARENT
+      - role: LIBRARIAN
+      - role: RECEPTIONIST
+      - role: SCHOOL_STAFF
+  - name: AssignRole
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/assign-role'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+  - name: GetRegistrationPaymentQuote
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/finance/registration-payment-quote'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: RECEPTIONIST
+      - role: FINANCE
+  - name: ManageAcademicYear
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/academic/manage-academic-year'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+  - name: ManageGradeLevel
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/academic/manage-grade-level'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+  - name: ManageGradeMonthlyFee
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/academic/manage-grade-monthly-fee'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+  - name: ManageSectionSlot
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/academic/manage-section-slot'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+  - name: ManageSchoolRegistrationPackage
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/academic/manage-registration-package'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+  - name: UpdateEnrollmentSection
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/academic/update-enrollment-section'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: RECEPTIONIST
+  - name: RegisterStudent
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/students/register'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: RECEPTIONIST
+      - role: FINANCE
+  - name: CreateStudentProfile
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/students/create-profile'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: RECEPTIONIST
+      - role: FINANCE
+  - name: SetStudentGuardians
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/students/set-guardians'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: RECEPTIONIST
+      - role: FINANCE
+  - name: CompleteStudentRegistration
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/students/complete-registration'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+      - role: BRANCH_ADMIN
+      - role: RECEPTIONIST
+      - role: FINANCE
+  - name: ManageUser
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/staff/manage-user'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+  - name: RevokeRoleAssignment
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}}/api/v1/auth/revoke-role-assignment'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-action-secret
+          value_from_env: ACTION_SECRET
+    permissions:
+      - role: SUPER_PROVIDER_ADMIN
+      - role: PROVIDER_ADMIN
+      - role: SCHOOL_OWNER
+      - role: SCHOOL_ADMIN
+custom_types:
+  enums:
+    - name: RoleAssignmentScope
+  input_objects:
+    - name: RegisterSchoolInput
+    - name: LoginInput
+    - name: RefreshSessionInput
+    - name: LogoutInput
+    - name: ListMySessionsInput
+    - name: RevokeSessionInput
+    - name: RevokeOtherSessionsInput
+    - name: SelectContextInput
+    - name: AssignRoleInput
+    - name: RevokeRoleAssignmentInput
+    - name: RegisterStudentInput
+    - name: CreateStudentProfileInput
+    - name: SetStudentGuardiansInput
+    - name: CompleteStudentRegistrationInput
+    - name: RegisterStudentGuardianInput
+    - name: RegisterStudentHealthInput
+    - name: RegisterStudentAddressInput
+    - name: RegisterStudentPaymentInput
+    - name: RegistrationPaymentQuoteInput
+    - name: ManageAcademicYearInput
+    - name: ManageGradeLevelInput
+    - name: ManageGradeMonthlyFeeInput
+    - name: ManageSectionSlotInput
+    - name: ManageSchoolRegistrationPackageInput
+    - name: ManageTeacherInput
+    - name: ManageUserInput
+    - name: UpdateEnrollmentSectionInput
+  objects:
+    - name: RegisterSchoolOutput
+    - name: LoginOutput
+    - name: LogoutOutput
+    - name: ListMySessionsOutput
+    - name: SessionSummary
+    - name: RevokeSessionOutput
+    - name: RevokeOtherSessionsOutput
+    - name: SelectContextOutput
+    - name: ListMyContextsOutput
+    - name: AuthContextOption
+    - name: AssignRoleOutput
+    - name: RevokeRoleAssignmentOutput
+    - name: RegisterStudentOutput
+    - name: CreateStudentProfileOutput
+    - name: SetStudentGuardiansOutput
+    - name: CompleteStudentRegistrationOutput
+    - name: RegistrationPaymentQuoteOutput
+    - name: RegistrationPaymentQuoteLine
+    - name: ManageAcademicYearOutput
+    - name: ManageGradeLevelOutput
+    - name: ManageGradeMonthlyFeeOutput
+    - name: ManageSectionSlotOutput
+    - name: ManageSchoolRegistrationPackageOutput
+    - name: ManageTeacherOutput
+    - name: ManageUserOutput
+    - name: UpdateEnrollmentSectionOutput
+  scalars: []

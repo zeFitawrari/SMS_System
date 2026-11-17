@@ -1,0 +1,58 @@
+table:
+  name: student_guardians
+  schema: student
+configuration:
+  custom_name: student_guardians
+  custom_root_fields:
+    select: student_guardians
+object_relationships:
+  - name: student
+    using:
+      foreign_key_constraint_on: student_id
+  - name: guardian
+    using:
+      foreign_key_constraint_on: guardian_id
+select_permissions:
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - student_id
+        - guardian_id
+        - relationship
+        - is_primary_contact
+        - is_emergency_contact
+        - is_authorized_pickup
+      filter:
+        student:
+          school_id:
+            _eq: X-Hasura-School-Id
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - student_id
+        - guardian_id
+        - relationship
+        - is_primary_contact
+        - is_emergency_contact
+        - is_authorized_pickup
+      filter:
+        student:
+          school_id:
+            _eq: X-Hasura-School-Id
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - student_id
+        - guardian_id
+        - relationship
+        - is_primary_contact
+      filter:
+        student:
+          _and:
+            - school_id:
+                _eq: X-Hasura-School-Id
+            - branch_id:
+                _eq: X-Hasura-Branch-Id

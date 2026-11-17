@@ -1,0 +1,16 @@
+DELETE FROM identity.roles
+WHERE school_id IS NULL
+  AND name = ANY(ARRAY[
+    'SUPER_PROVIDER_ADMIN',
+    'PROVIDER_ADMIN',
+    'SCHOOL_OWNER',
+    'SCHOOL_ADMIN',
+    'BRANCH_ADMIN',
+    'FINANCE',
+    'TEACHER',
+    'STUDENT',
+    'PARENT',
+    'LIBRARIAN',
+    'RECEPTIONIST',
+    'SCHOOL_STAFF'
+  ]);

@@ -1,0 +1,47 @@
+table:
+  name: grade_monthly_fees
+  schema: finance
+configuration:
+  custom_name: grade_monthly_fees
+  custom_root_fields:
+    select: grade_monthly_fees
+select_permissions:
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - school_id
+        - academic_year_id
+        - grade_level_id
+        - monthly_amount
+        - currency
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - academic_year_id
+        - grade_level_id
+        - monthly_amount
+        - currency
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: FINANCE
+    permission:
+      columns:
+        - academic_year_id
+        - grade_level_id
+        - monthly_amount
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: RECEPTIONIST
+    permission:
+      columns:
+        - grade_level_id
+        - monthly_amount
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id

@@ -1,0 +1,74 @@
+table:
+  name: student_health
+  schema: student
+configuration:
+  custom_name: student_health
+  custom_root_fields:
+    select: student_health
+    select_by_pk: student_health_by_pk
+object_relationships:
+  - name: student
+    using:
+      foreign_key_constraint_on: student_id
+select_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - student_id
+        - medical_conditions
+        - allergies
+        - medications
+        - medical_history
+        - special_needs
+        - emergency_notes
+        - created_at
+        - updated_at
+      filter: {}
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - student_id
+        - medical_conditions
+        - allergies
+        - medications
+        - medical_history
+        - special_needs
+        - emergency_notes
+        - created_at
+        - updated_at
+      filter:
+        student:
+          school_id:
+            _eq: X-Hasura-School-Id
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - student_id
+        - medical_conditions
+        - allergies
+        - medications
+        - medical_history
+        - special_needs
+        - emergency_notes
+        - created_at
+        - updated_at
+      filter:
+        student:
+          school_id:
+            _eq: X-Hasura-School-Id
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - student_id
+        - medical_conditions
+        - allergies
+        - medications
+        - emergency_notes
+        - created_at
+      filter:
+        student:
+          _and:
+            - school_id:
+                _eq: X-Hasura-School-Id
+            - branch_id:
+                _eq: X-Hasura-Branch-Id

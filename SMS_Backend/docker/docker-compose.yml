@@ -1,0 +1,73 @@
+name: smb
+
+networks:
+  smb_internal:
+    driver: bridge
+
+x-common-env: &common-env
+  POSTGRES_USER: ${POSTGRES_USER:-smb_user}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-smb_pass}
+  POSTGRES_DB: ${POSTGRES_DB:-smb_db}
+  ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET:-smb_access_token_secret_min_32_chars}
+  ACTION_SECRET: ${ACTION_SECRET:-smb_action_secret}
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    networks: [smb_internal]
+    ports:
+      - "${POSTGRES_PUBLISH_PORT:-5434}:5432"
+    environment:
+      <<: *common-env
+    volumes:
+      - smb_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-smb_user} -d ${POSTGRES_DB:-smb_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  hasura:
+    image: hasura/graphql-engine:v2.36.0
+    networks: [smb_internal]
+    ports:
+      - "${HASURA_PUBLISH_PORT:-8084}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://${POSTGRES_USER:-smb_user}:${POSTGRES_PASSWORD:-smb_pass}@postgres:5432/${POSTGRES_DB:-smb_db}
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET:-smb_hasura_admin_secret}
+      HASURA_GRAPHQL_AUTH_HOOK: http://app:3005/api/v1/auth/hasura-webhook
+      HASURA_GRAPHQL_AUTH_HOOK_MODE: POST
+      # anonymous role is returned by the auth hook when there is no Bearer token (cannot set UNAUTHORIZED_ROLE with auth hook on v2.36)
+      HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL: http://app:3005
+      ACTION_SECRET: ${ACTION_SECRET:-smb_action_secret}
+
+  app:
+    build:
+      context: ../api
+      dockerfile: Dockerfile
+    networks: [smb_internal]
+    ports:
+      - "${API_PUBLISH_PORT:-3005}:3005"
+    environment:
+      <<: *common-env
+      NODE_ENV: development
+      PORT: "3005"
+      DATABASE_URL: postgres://${POSTGRES_USER:-smb_user}:${POSTGRES_PASSWORD:-smb_pass}@postgres:5432/${POSTGRES_DB:-smb_db}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+    volumes:
+      - ../api:/app
+      - smb_app_node_modules:/app/node_modules
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  smb_pgdata:
+  smb_app_node_modules:

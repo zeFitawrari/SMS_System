@@ -1,0 +1,135 @@
+table:
+  name: auth_events
+  schema: identity
+configuration:
+  column_config: {}
+  custom_column_names: {}
+  custom_name: auth_events
+  custom_root_fields:
+    select: auth_events
+    select_by_pk: auth_event
+    select_aggregate: auth_events_aggregate
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+select_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - event_type
+        - client_ip
+        - user_agent
+        - metadata
+        - created_at
+      filter: {}
+      allow_aggregations: true
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - event_type
+        - client_ip
+        - user_agent
+        - metadata
+        - created_at
+      filter: {}
+      allow_aggregations: true
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - user_id
+        - event_type
+        - client_ip
+        - user_agent
+        - metadata
+        - created_at
+      filter:
+        user:
+          school_id:
+            _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - event_type
+        - client_ip
+        - user_agent
+        - metadata
+        - created_at
+      filter:
+        user:
+          _and:
+            - school_id:
+                _eq: X-Hasura-School-Id
+            - _not:
+                role_assignments:
+                  _and:
+                    - revoked_at:
+                        _is_null: true
+                    - role:
+                        name:
+                          _in:
+                            - SCHOOL_OWNER
+                            - SCHOOL_ADMIN
+      allow_aggregations: true
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - event_type
+        - client_ip
+        - user_agent
+        - metadata
+        - created_at
+      filter:
+        _or:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - user:
+              role_assignments:
+                _and:
+                  - branch_id:
+                      _eq: X-Hasura-Branch-Id
+                  - revoked_at:
+                      _is_null: true
+                  - role:
+                      name:
+                        _in:
+                          - TEACHER
+                          - STUDENT
+                          - PARENT
+                          - RECEPTIONIST
+                          - LIBRARIAN
+                          - SCHOOL_STAFF
+                          - FINANCE
+      allow_aggregations: true
+  - role: STUDENT
+    permission:
+      columns:
+        - id
+        - user_id
+        - event_type
+        - created_at
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      allow_aggregations: false
+  - role: PARENT
+    permission:
+      columns:
+        - id
+        - user_id
+        - event_type
+        - created_at
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      allow_aggregations: false

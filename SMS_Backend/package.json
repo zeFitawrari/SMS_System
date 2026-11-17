@@ -1,0 +1,27 @@
+{
+  "name": "school-management-backend-greenfield",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Greenfield SMS backend — Hasura + Express",
+  "engines": {
+    "node": ">=20 <23"
+  },
+  "scripts": {
+    "postinstall": "yarn install --cwd api --frozen-lockfile 2>/dev/null || yarn install --cwd api",
+    "metadata": "bash scripts/ops.sh metadata",
+    "dev": "npm run dev --prefix api",
+    "start": "npm run start --prefix api",
+    "test": "npm run test --prefix api",
+    "setup": "bash scripts/ops.sh setup",
+    "up": "bash scripts/ops.sh up",
+    "down": "bash scripts/ops.sh down",
+    "down:clean": "bash scripts/ops.sh down-clean",
+    "express:log": "bash scripts/ops.sh logs app",
+    "hasura:log": "bash scripts/ops.sh logs hasura",
+    "postgres:log": "bash scripts/ops.sh logs postgres",
+    "migrate": "bash scripts/ops.sh migrate",
+    "seed:provider": "bash scripts/ops.sh seed",
+    "console": "bash scripts/ops.sh console",
+    "logs": "bash scripts/ops.sh logs"
+  }
+}

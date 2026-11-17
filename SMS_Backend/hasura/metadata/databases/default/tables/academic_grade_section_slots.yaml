@@ -1,0 +1,79 @@
+table:
+  name: grade_section_slots
+  schema: academic
+configuration:
+  custom_name: grade_section_slots
+  custom_root_fields:
+    select: grade_section_slots
+    select_by_pk: grade_section_slot
+object_relationships:
+  - name: section
+    using:
+      manual_configuration:
+        remote_table:
+          schema: academic
+          name: sections
+        column_mapping:
+          id: slot_id
+select_permissions:
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - school_id
+        - branch_id
+        - academic_year_id
+        - grade_level_id
+        - slot_index
+        - section_name
+        - max_capacity
+        - created_at
+        - updated_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - school_id
+        - branch_id
+        - academic_year_id
+        - grade_level_id
+        - slot_index
+        - section_name
+        - max_capacity
+        - created_at
+        - updated_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - branch_id
+        - academic_year_id
+        - grade_level_id
+        - slot_index
+        - section_name
+        - max_capacity
+      filter:
+        _and:
+          - school_id:
+              _eq: X-Hasura-School-Id
+          - branch_id:
+              _eq: X-Hasura-Branch-Id
+  - role: RECEPTIONIST
+    permission:
+      columns:
+        - id
+        - branch_id
+        - academic_year_id
+        - grade_level_id
+        - slot_index
+        - section_name
+        - max_capacity
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id

@@ -1,0 +1,67 @@
+table:
+  name: registration_payment_packages
+  schema: finance
+configuration:
+  custom_name: registration_payment_packages
+  custom_root_fields:
+    select: registration_payment_packages
+select_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - code
+        - label
+        - duration_months
+        - discount_percent
+        - sort_order
+      filter: {}
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - code
+        - label
+        - duration_months
+        - discount_percent
+        - sort_order
+      filter: {}
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - code
+        - label
+        - duration_months
+        - discount_percent
+        - sort_order
+      filter: {}
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - code
+        - label
+        - duration_months
+        - discount_percent
+      filter: {}
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - code
+        - label
+        - duration_months
+        - discount_percent
+      filter: {}
+  - role: RECEPTIONIST
+    permission:
+      columns:
+        - code
+        - label
+        - duration_months
+        - discount_percent
+      filter: {}
+  - role: FINANCE
+    permission:
+      columns:
+        - code
+        - label
+        - duration_months
+        - discount_percent
+      filter: {}

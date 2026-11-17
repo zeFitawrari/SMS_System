@@ -1,0 +1,169 @@
+table:
+  name: students
+  schema: student
+configuration:
+  custom_name: students
+  custom_root_fields:
+    select: students
+    select_by_pk: student
+    select_aggregate: students_aggregate
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  - name: health
+    using:
+      foreign_key_constraint_on:
+        column: student_id
+        table:
+          name: student_health
+          schema: student
+  - name: address
+    using:
+      foreign_key_constraint_on:
+        column: student_id
+        table:
+          name: student_addresses
+          schema: student
+array_relationships:
+  - name: enrollments
+    using:
+      foreign_key_constraint_on:
+        column: student_id
+        table:
+          name: enrollments
+          schema: student
+  - name: student_guardians
+    using:
+      foreign_key_constraint_on:
+        column: student_id
+        table:
+          name: student_guardians
+          schema: student
+  - name: registration_payments
+    using:
+      foreign_key_constraint_on:
+        column: student_id
+        table:
+          name: registration_payments
+          schema: finance
+select_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - school_id
+        - branch_id
+        - registration_id
+        - user_id
+        - date_of_birth
+        - sex
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - school_id
+        - branch_id
+        - registration_id
+        - user_id
+        - date_of_birth
+        - sex
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - school_id
+        - branch_id
+        - registration_id
+        - user_id
+        - date_of_birth
+        - sex
+        - created_at
+        - updated_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - school_id
+        - branch_id
+        - registration_id
+        - user_id
+        - date_of_birth
+        - sex
+        - created_at
+        - updated_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - school_id
+        - branch_id
+        - registration_id
+        - user_id
+        - date_of_birth
+        - sex
+        - created_at
+        - updated_at
+      filter:
+        _and:
+          - school_id:
+              _eq: X-Hasura-School-Id
+          - branch_id:
+              _eq: X-Hasura-Branch-Id
+      allow_aggregations: true
+  - role: FINANCE
+    permission:
+      columns:
+        - id
+        - school_id
+        - branch_id
+        - registration_id
+        - user_id
+        - created_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: RECEPTIONIST
+    permission:
+      columns:
+        - id
+        - school_id
+        - branch_id
+        - registration_id
+        - user_id
+        - date_of_birth
+        - sex
+        - created_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: TEACHER
+    permission:
+      columns:
+        - id
+        - registration_id
+        - user_id
+        - school_id
+        - branch_id
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: false

@@ -1,0 +1,266 @@
+table:
+  name: users
+  schema: identity
+configuration:
+  column_config: {}
+  custom_column_names: {}
+  custom_name: users
+  custom_root_fields:
+    select: users
+    select_by_pk: user
+    select_aggregate: users_aggregate
+    insert: insert_users
+    insert_one: insert_user
+    update: update_users
+    update_by_pk: update_user
+    delete: delete_users
+    delete_by_pk: delete_user
+object_relationships:
+  - name: school
+    using:
+      foreign_key_constraint_on: school_id
+array_relationships:
+  - name: sessions
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: sessions
+          schema: identity
+  - name: auth_events
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: auth_events
+          schema: identity
+  - name: role_assignments
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: role_assignments
+          schema: identity
+  - name: students
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: students
+          schema: student
+select_permissions:
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - email
+        - phone
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+        - last_login_at
+        - created_at
+        - updated_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - email
+        - phone
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+        - last_login_at
+        - created_at
+        - updated_at
+      filter:
+        _and:
+          - school_id:
+              _eq: X-Hasura-School-Id
+          - _not:
+              role_assignments:
+                _and:
+                  - revoked_at:
+                      _is_null: true
+                  - role:
+                      name:
+                        _in:
+                          - SCHOOL_OWNER
+                          - SCHOOL_ADMIN
+      allow_aggregations: true
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - email
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+        - created_at
+        - updated_at
+      filter:
+        _and:
+          - school_id:
+              _eq: X-Hasura-School-Id
+          - _or:
+              - id:
+                  _eq: X-Hasura-User-Id
+              - role_assignments:
+                  _and:
+                    - branch_id:
+                        _eq: X-Hasura-Branch-Id
+                    - revoked_at:
+                        _is_null: true
+                    - role:
+                        name:
+                          _in:
+                            - TEACHER
+                            - STUDENT
+                            - PARENT
+                            - RECEPTIONIST
+                            - LIBRARIAN
+                            - SCHOOL_STAFF
+                            - FINANCE
+      allow_aggregations: true
+  - role: TEACHER
+    permission:
+      columns:
+        - id
+        - email
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: false
+  - role: STUDENT
+    permission:
+      columns:
+        - id
+        - email
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+      filter:
+        _and:
+          - school_id:
+              _eq: X-Hasura-School-Id
+          - id:
+              _eq: X-Hasura-User-Id
+  - role: PARENT
+    permission:
+      columns:
+        - id
+        - email
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+      filter:
+        _and:
+          - school_id:
+              _eq: X-Hasura-School-Id
+          - id:
+              _eq: X-Hasura-User-Id
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - email
+        - phone
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+        - last_login_at
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - email
+        - phone
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+insert_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      check: {}
+      columns:
+        - email
+        - password_hash
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+  - role: PROVIDER_ADMIN
+    permission:
+      check: {}
+      columns:
+        - email
+        - password_hash
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+update_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - email
+        - password_hash
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+      filter: {}
+      check: {}
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - email
+        - password_hash
+        - school_id
+        - first_name
+        - middle_name
+        - last_name
+        - status
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      filter: {}
+  - role: PROVIDER_ADMIN
+    permission:
+      filter: {}

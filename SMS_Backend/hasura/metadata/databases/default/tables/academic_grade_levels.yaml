@@ -1,0 +1,77 @@
+table:
+  name: grade_levels
+  schema: academic
+configuration:
+  custom_name: grade_levels
+  custom_root_fields:
+    select: grade_levels
+    select_by_pk: grade_level
+select_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - school_id
+        - name
+        - code
+        - level_type
+        - sort_order
+        - is_active
+      filter: {}
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - school_id
+        - name
+        - code
+        - level_type
+        - sort_order
+        - is_active
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - school_id
+        - name
+        - code
+        - level_type
+        - sort_order
+        - is_active
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - name
+        - code
+        - level_type
+        - sort_order
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: RECEPTIONIST
+    permission:
+      columns:
+        - id
+        - name
+        - code
+        - level_type
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: FINANCE
+    permission:
+      columns:
+        - id
+        - name
+        - code
+        - level_type
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id

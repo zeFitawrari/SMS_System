@@ -1,0 +1,145 @@
+table:
+  name: role_assignments
+  schema: identity
+configuration:
+  column_config: {}
+  custom_column_names: {}
+  custom_name: role_assignments
+  custom_root_fields:
+    select: role_assignments
+    select_by_pk: role_assignment
+    select_aggregate: role_assignments_aggregate
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  - name: role
+    using:
+      foreign_key_constraint_on: role_id
+  - name: school
+    using:
+      foreign_key_constraint_on: school_id
+select_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - school_id
+        - role_id
+        - scope_type
+        - branch_id
+        - granted_by
+        - revoked_at
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - school_id
+        - role_id
+        - scope_type
+        - branch_id
+        - granted_by
+        - revoked_at
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - user_id
+        - school_id
+        - role_id
+        - scope_type
+        - branch_id
+        - granted_by
+        - revoked_at
+        - created_at
+        - updated_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - school_id
+        - role_id
+        - scope_type
+        - branch_id
+        - granted_by
+        - revoked_at
+        - created_at
+        - updated_at
+      filter:
+        _and:
+          - school_id:
+              _eq: X-Hasura-School-Id
+          - role:
+              name:
+                _nin:
+                  - SCHOOL_OWNER
+                  - SCHOOL_ADMIN
+      allow_aggregations: true
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - school_id
+        - role_id
+        - scope_type
+        - branch_id
+        - granted_by
+        - revoked_at
+        - created_at
+        - updated_at
+      filter:
+        _and:
+          - school_id:
+              _eq: X-Hasura-School-Id
+          - role:
+              name:
+                _nin:
+                  - SCHOOL_OWNER
+                  - SCHOOL_ADMIN
+                  - BRANCH_ADMIN
+          - _or:
+              - user_id:
+                  _eq: X-Hasura-User-Id
+              - branch_id:
+                  _eq: X-Hasura-Branch-Id
+      allow_aggregations: true
+  - role: STUDENT
+    permission:
+      columns:
+        - id
+        - role_id
+        - scope_type
+        - branch_id
+        - revoked_at
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      allow_aggregations: false
+  - role: PARENT
+    permission:
+      columns:
+        - id
+        - role_id
+        - scope_type
+        - branch_id
+        - revoked_at
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      allow_aggregations: false

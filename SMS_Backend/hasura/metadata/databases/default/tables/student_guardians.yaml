@@ -1,0 +1,44 @@
+table:
+  name: guardians
+  schema: student
+configuration:
+  custom_name: guardians
+  custom_root_fields:
+    select: guardians
+    select_by_pk: guardian
+select_permissions:
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - school_id
+        - full_name
+        - phone
+        - phone_alt
+        - email
+        - address
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - full_name
+        - phone
+        - phone_alt
+        - email
+        - address
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - full_name
+        - phone
+        - phone_alt
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id

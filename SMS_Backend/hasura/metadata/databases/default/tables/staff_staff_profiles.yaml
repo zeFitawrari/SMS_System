@@ -1,0 +1,99 @@
+table:
+  name: staff_profiles
+  schema: staff
+configuration:
+  custom_name: staff_profiles
+  custom_root_fields:
+    select: staff_profiles
+    select_by_pk: staff_profile
+    select_aggregate: staff_profiles_aggregate
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  - name: teacher_profile
+    using:
+      foreign_key_constraint_on:
+        column: staff_profile_id
+        table:
+          name: teacher_profiles
+          schema: teacher
+  - name: school
+    using:
+      manual_configuration:
+        column_mapping:
+          school_id: id
+        insertion_order: null
+        remote_table:
+          name: schools
+          schema: tenancy
+  - name: branch
+    using:
+      manual_configuration:
+        column_mapping:
+          branch_id: id
+        insertion_order: null
+        remote_table:
+          name: branches
+          schema: tenancy
+select_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - school_id
+        - branch_id
+        - employee_code
+        - job_title
+        - hired_on
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - school_id
+        - branch_id
+        - employee_code
+        - job_title
+        - hired_on
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - user_id
+        - school_id
+        - branch_id
+        - employee_code
+        - job_title
+        - hired_on
+        - created_at
+        - updated_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - user_id
+        - school_id
+        - branch_id
+        - employee_code
+        - job_title
+        - hired_on
+        - created_at
+        - updated_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true

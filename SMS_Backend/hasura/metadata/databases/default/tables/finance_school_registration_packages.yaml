@@ -1,0 +1,44 @@
+table:
+  name: school_registration_packages
+  schema: finance
+configuration:
+  custom_name: school_registration_packages
+  custom_root_fields:
+    select: school_registration_packages
+select_permissions:
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - school_id
+        - package_code
+        - is_enabled
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - school_id
+        - package_code
+        - is_enabled
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: RECEPTIONIST
+    permission:
+      columns:
+        - package_code
+        - is_enabled
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: FINANCE
+    permission:
+      columns:
+        - package_code
+        - is_enabled
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id

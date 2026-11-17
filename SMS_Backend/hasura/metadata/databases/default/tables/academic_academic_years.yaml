@@ -1,0 +1,75 @@
+table:
+  name: academic_years
+  schema: academic
+configuration:
+  custom_name: academic_years
+  custom_root_fields:
+    select: academic_years
+    select_by_pk: academic_year
+select_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - school_id
+        - name
+        - code
+        - starts_on
+        - ends_on
+        - is_current
+      filter: {}
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - school_id
+        - name
+        - code
+        - starts_on
+        - ends_on
+        - is_current
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - school_id
+        - name
+        - code
+        - starts_on
+        - ends_on
+        - is_current
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - name
+        - code
+        - is_current
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: RECEPTIONIST
+    permission:
+      columns:
+        - id
+        - name
+        - code
+        - is_current
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+  - role: FINANCE
+    permission:
+      columns:
+        - id
+        - name
+        - code
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id

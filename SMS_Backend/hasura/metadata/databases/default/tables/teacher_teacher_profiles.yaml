@@ -1,0 +1,80 @@
+table:
+  name: teacher_profiles
+  schema: teacher
+configuration:
+  custom_name: teacher_profiles
+  custom_root_fields:
+    select: teacher_profiles
+    select_by_pk: teacher_profile
+    select_aggregate: teacher_profiles_aggregate
+object_relationships:
+  - name: staff_profile
+    using:
+      foreign_key_constraint_on: staff_profile_id
+select_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - staff_profile_id
+        - education_level
+        - field_of_study
+        - academic_background
+        - years_of_experience
+        - teaching_license_number
+        - employment_type
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - staff_profile_id
+        - education_level
+        - field_of_study
+        - academic_background
+        - years_of_experience
+        - teaching_license_number
+        - employment_type
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - staff_profile_id
+        - education_level
+        - field_of_study
+        - academic_background
+        - years_of_experience
+        - teaching_license_number
+        - employment_type
+        - created_at
+        - updated_at
+      filter:
+        staff_profile:
+          school_id:
+            _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - staff_profile_id
+        - education_level
+        - field_of_study
+        - academic_background
+        - years_of_experience
+        - teaching_license_number
+        - employment_type
+        - created_at
+        - updated_at
+      filter:
+        staff_profile:
+          school_id:
+            _eq: X-Hasura-School-Id
+      allow_aggregations: true

@@ -1,0 +1,113 @@
+table:
+  name: roles
+  schema: identity
+configuration:
+  column_config: {}
+  custom_column_names: {}
+  custom_name: roles
+  custom_root_fields:
+    select: roles
+    select_by_pk: role
+    select_aggregate: roles_aggregate
+    insert: insert_roles
+    insert_one: insert_role
+    update: update_roles
+    update_by_pk: update_role
+    delete: delete_roles
+    delete_by_pk: delete_role
+select_permissions:
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - name
+        - school_id
+        - created_at
+      filter:
+        _or:
+          - school_id:
+              _is_null: true
+          - school_id:
+              _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - name
+        - school_id
+        - created_at
+      filter:
+        _or:
+          - school_id:
+              _is_null: true
+          - school_id:
+              _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - name
+        - school_id
+        - created_at
+      filter:
+        _or:
+          - school_id:
+              _is_null: true
+          - school_id:
+              _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - name
+        - school_id
+        - created_at
+      filter: {}
+      allow_aggregations: true
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - name
+        - school_id
+        - created_at
+      filter: {}
+      allow_aggregations: true
+insert_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      check: {}
+      columns:
+        - name
+        - school_id
+  - role: PROVIDER_ADMIN
+    permission:
+      check: {}
+      columns:
+        - name
+        - school_id
+update_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - name
+        - school_id
+      filter: {}
+      check: {}
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - name
+        - school_id
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      filter: {}
+  - role: PROVIDER_ADMIN
+    permission:
+      filter: {}

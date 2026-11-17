@@ -1,0 +1,94 @@
+table:
+  name: enrollments
+  schema: student
+configuration:
+  custom_name: enrollments
+  custom_root_fields:
+    select: enrollments
+    select_by_pk: enrollment
+object_relationships:
+  - name: student
+    using:
+      foreign_key_constraint_on: student_id
+select_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - student_id
+        - school_id
+        - branch_id
+        - academic_year_id
+        - grade_level_id
+        - section_id
+        - enrolled_on
+        - status
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - student_id
+        - school_id
+        - branch_id
+        - academic_year_id
+        - grade_level_id
+        - section_id
+        - enrolled_on
+        - status
+        - created_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - student_id
+        - school_id
+        - branch_id
+        - academic_year_id
+        - grade_level_id
+        - section_id
+        - enrolled_on
+        - status
+        - created_at
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: BRANCH_ADMIN
+    permission:
+      columns:
+        - id
+        - student_id
+        - branch_id
+        - academic_year_id
+        - grade_level_id
+        - section_id
+        - enrolled_on
+        - status
+      filter:
+        _and:
+          - school_id:
+              _eq: X-Hasura-School-Id
+          - branch_id:
+              _eq: X-Hasura-Branch-Id
+      allow_aggregations: true
+  - role: FINANCE
+    permission:
+      columns:
+        - id
+        - student_id
+        - academic_year_id
+        - grade_level_id
+        - enrolled_on
+        - status
+      filter:
+        school_id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true

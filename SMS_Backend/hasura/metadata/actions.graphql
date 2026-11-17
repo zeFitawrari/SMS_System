@@ -1,0 +1,542 @@
+enum RoleAssignmentScope {
+  SCHOOL
+  BRANCH
+}
+
+type Query {
+  ListMySessions(object: ListMySessionsInput): ListMySessionsOutput
+  ListMyContexts: ListMyContextsOutput
+  GetRegistrationPaymentQuote(object: RegistrationPaymentQuoteInput!): RegistrationPaymentQuoteOutput
+}
+
+type Mutation {
+  RegisterSchool(
+    object: RegisterSchoolInput!
+  ): RegisterSchoolOutput
+
+  Login(object: LoginInput!): LoginOutput
+
+  RefreshSession(object: RefreshSessionInput!): LoginOutput
+
+  Logout(object: LogoutInput): LogoutOutput
+
+  RevokeSession(object: RevokeSessionInput!): RevokeSessionOutput
+
+  RevokeOtherSessions(object: RevokeOtherSessionsInput!): RevokeOtherSessionsOutput
+
+  SelectContext(object: SelectContextInput!): SelectContextOutput
+
+  AssignRole(object: AssignRoleInput!): AssignRoleOutput
+
+  RevokeRoleAssignment(object: RevokeRoleAssignmentInput!): RevokeRoleAssignmentOutput
+
+  RegisterStudent(object: RegisterStudentInput!): RegisterStudentOutput
+
+  CreateStudentProfile(object: CreateStudentProfileInput!): CreateStudentProfileOutput
+  SetStudentGuardians(object: SetStudentGuardiansInput!): SetStudentGuardiansOutput
+  CompleteStudentRegistration(object: CompleteStudentRegistrationInput!): CompleteStudentRegistrationOutput
+
+  ManageAcademicYear(object: ManageAcademicYearInput!): ManageAcademicYearOutput
+  ManageGradeLevel(object: ManageGradeLevelInput!): ManageGradeLevelOutput
+  ManageGradeMonthlyFee(object: ManageGradeMonthlyFeeInput!): ManageGradeMonthlyFeeOutput
+  ManageSectionSlot(object: ManageSectionSlotInput!): ManageSectionSlotOutput
+  ManageSchoolRegistrationPackage(object: ManageSchoolRegistrationPackageInput!): ManageSchoolRegistrationPackageOutput
+
+  UpdateEnrollmentSection(object: UpdateEnrollmentSectionInput!): UpdateEnrollmentSectionOutput
+
+  ManageUser(object: ManageUserInput!): ManageUserOutput
+}
+
+input RegisterSchoolInput {
+  school_name: String!
+  school_address: String
+  latitude: Float
+  longitude: Float
+  main_branch_name: String
+  admin_email: String!
+  admin_phone: String!
+  admin_password: String!
+  admin_first_name: String!
+  admin_last_name: String!
+  owner_email: String
+  owner_phone: String
+  owner_password: String
+  owner_first_name: String
+  owner_last_name: String
+}
+
+input LoginInput {
+  email: String
+  phone: String
+  password: String!
+}
+
+input RefreshSessionInput {
+  session_token: String!
+}
+
+input LogoutInput {
+  session_token: String
+}
+
+input ListMySessionsInput {
+  current_session_id: uuid
+  include_inactive: Boolean
+}
+
+input RevokeSessionInput {
+  session_id: uuid!
+}
+
+input RevokeOtherSessionsInput {
+  current_session_id: uuid!
+}
+
+type RegisterSchoolOutput {
+  school_id: uuid!
+  main_branch_id: uuid!
+  admin_id: uuid!
+  owner_id: uuid!
+  access_token: String!
+  token: String!
+  session_id: uuid!
+  session_token: String!
+}
+
+type LoginOutput {
+  id: uuid!
+  access_token: String!
+  token: String!
+  session_id: uuid!
+  session_token: String!
+  email: String
+  phone: String
+  first_name: String!
+  last_name: String!
+  school_id: uuid!
+  roles: [String!]!
+  active_role: String
+  active_branch_id: uuid
+}
+
+type LogoutOutput {
+  status: String!
+  message: String!
+}
+
+type ListMySessionsOutput {
+  sessions: [SessionSummary!]!
+}
+
+type SessionSummary {
+  session_id: uuid!
+  created_at: timestamptz!
+  last_active_at: timestamptz!
+  expires_at: timestamptz!
+  revoked_at: timestamptz
+  user_agent: String
+  client_ip: String
+  is_active: Boolean!
+  is_current: Boolean!
+}
+
+type RevokeSessionOutput {
+  status: String!
+  message: String!
+  revoked_session_id: uuid!
+}
+
+type RevokeOtherSessionsOutput {
+  status: String!
+  message: String!
+  revoked_count: Int!
+}
+
+input SelectContextInput {
+  role: String!
+  branch_id: uuid
+}
+
+type SelectContextOutput {
+  access_token: String!
+  token: String!
+  active_role: String!
+  active_branch_id: uuid
+  school_id: uuid!
+  session_id: uuid!
+  roles: [String!]!
+}
+
+type ListMyContextsOutput {
+  contexts: [AuthContextOption!]!
+}
+
+type AuthContextOption {
+  assignment_id: uuid!
+  role: String!
+  scope_type: String!
+  branch_id: uuid
+  branch_name: String
+  branch_code: String
+}
+
+input AssignRoleInput {
+  user_id: uuid!
+  role: String!
+  scope_type: RoleAssignmentScope!
+  branch_id: uuid
+}
+
+type AssignRoleOutput {
+  status: String!
+  user_id: uuid!
+  role: String!
+  scope_type: String!
+  branch_id: uuid
+  school_id: uuid!
+}
+
+input RevokeRoleAssignmentInput {
+  assignment_id: uuid!
+}
+
+type RevokeRoleAssignmentOutput {
+  status: String!
+  message: String!
+  assignment_id: uuid!
+  user_id: uuid!
+}
+
+input RegisterStudentGuardianInput {
+  full_name: String!
+  relationship: String!
+  phone: String!
+  phone_alt: String
+  email: String
+  address: String
+  is_primary_contact: Boolean
+  is_emergency_contact: Boolean
+  is_authorized_pickup: Boolean
+}
+
+input RegisterStudentHealthInput {
+  medical_conditions: String
+  allergies: String
+  medications: String
+  medical_history: String
+  special_needs: String
+  emergency_notes: String
+}
+
+input RegisterStudentAddressInput {
+  label: String
+  address_line: String
+  latitude: float8
+  longitude: float8
+}
+
+input RegisterStudentPaymentInput {
+  package_code: String!
+  payment_method: String!
+  transfer_reference: String
+  payment_date: date
+}
+
+input RegisterStudentInput {
+  registration_type: String
+  student_id: uuid
+  school_id: uuid
+  branch_id: uuid
+  academic_year_id: uuid!
+  grade_level_id: uuid!
+  section_id: uuid
+  enrollment_date: date
+  email: String
+  phone: String
+  first_name: String
+  middle_name: String
+  last_name: String
+  date_of_birth: date
+  sex: String
+  guardians: [RegisterStudentGuardianInput!]
+  health: RegisterStudentHealthInput
+  address: RegisterStudentAddressInput
+  payment: RegisterStudentPaymentInput!
+}
+
+input CreateStudentProfileInput {
+  school_id: uuid
+  branch_id: uuid
+  enrollment_date: date
+  email: String
+  phone: String
+  first_name: String!
+  middle_name: String
+  last_name: String!
+  date_of_birth: date!
+  sex: String!
+  health: RegisterStudentHealthInput
+  address: RegisterStudentAddressInput
+}
+
+type CreateStudentProfileOutput {
+  student_id: uuid!
+  user_id: uuid!
+  registration_id: String!
+  school_id: uuid!
+  branch_id: uuid!
+}
+
+input SetStudentGuardiansInput {
+  student_id: uuid!
+  school_id: uuid
+  branch_id: uuid
+  guardians: [RegisterStudentGuardianInput!]!
+}
+
+type SetStudentGuardiansOutput {
+  student_id: uuid!
+  guardian_count: Int!
+  school_id: uuid!
+  branch_id: uuid!
+}
+
+input CompleteStudentRegistrationInput {
+  registration_type: String
+  student_id: uuid!
+  school_id: uuid
+  branch_id: uuid
+  academic_year_id: uuid!
+  grade_level_id: uuid!
+  section_id: uuid
+  enrollment_date: date
+  payment: RegisterStudentPaymentInput!
+}
+
+type CompleteStudentRegistrationOutput {
+  registration_type: String!
+  student_id: uuid!
+  user_id: uuid!
+  registration_id: String!
+  enrollment_id: uuid!
+  section_id: uuid
+  payment_id: uuid!
+  payment_status: String!
+  base_amount: float8!
+  discount_amount: float8!
+  final_amount: float8!
+  package_code: String!
+}
+
+type RegisterStudentOutput {
+  registration_type: String!
+  student_id: uuid!
+  user_id: uuid!
+  registration_id: String!
+  enrollment_id: uuid!
+  section_id: uuid
+  payment_id: uuid!
+  payment_status: String!
+  base_amount: float8!
+  discount_amount: float8!
+  final_amount: float8!
+  package_code: String!
+}
+
+input RegistrationPaymentQuoteInput {
+  school_id: uuid
+  branch_id: uuid
+  academic_year_id: uuid!
+  grade_level_id: uuid!
+}
+
+type RegistrationPaymentQuoteLine {
+  package_code: String!
+  label: String!
+  duration_months: Int!
+  discount_percent: float8!
+  monthly_fee: float8!
+  base_amount: float8!
+  discount_amount: float8!
+  final_amount: float8!
+}
+
+type RegistrationPaymentQuoteOutput {
+  packages: [RegistrationPaymentQuoteLine!]!
+}
+
+input ManageAcademicYearInput {
+  is_delete: Boolean!
+  school_id: uuid!
+  id: uuid
+  name: String
+  code: String
+  starts_on: date
+  ends_on: date
+  is_current: Boolean
+}
+
+type ManageAcademicYearOutput {
+  deleted: Boolean!
+  id: uuid
+  school_id: uuid!
+  code: String
+  name: String
+  starts_on: date
+  ends_on: date
+  is_current: Boolean
+}
+
+input ManageGradeLevelInput {
+  is_delete: Boolean!
+  school_id: uuid!
+  id: uuid
+  name: String
+  code: String
+  level_type: String
+  sort_order: Int
+  is_active: Boolean
+}
+
+type ManageGradeLevelOutput {
+  deleted: Boolean!
+  id: uuid
+  school_id: uuid!
+  code: String
+  name: String
+  level_type: String
+  sort_order: Int
+  is_active: Boolean
+}
+
+input ManageGradeMonthlyFeeInput {
+  is_delete: Boolean!
+  school_id: uuid!
+  id: uuid
+  academic_year_id: uuid
+  grade_level_id: uuid
+  monthly_amount: float8
+}
+
+type ManageGradeMonthlyFeeOutput {
+  deleted: Boolean!
+  id: uuid
+  school_id: uuid!
+  academic_year_id: uuid
+  grade_level_id: uuid
+  monthly_amount: float8
+}
+
+input ManageSectionSlotInput {
+  is_delete: Boolean!
+  school_id: uuid!
+  id: uuid
+  branch_id: uuid
+  academic_year_id: uuid
+  grade_level_id: uuid
+  slot_index: Int
+  section_name: String
+  max_capacity: Int
+}
+
+type ManageSectionSlotOutput {
+  deleted: Boolean!
+  id: uuid
+  school_id: uuid!
+  branch_id: uuid
+  academic_year_id: uuid
+  grade_level_id: uuid
+  slot_index: Int
+  section_name: String
+  max_capacity: Int
+}
+
+input ManageSchoolRegistrationPackageInput {
+  is_delete: Boolean!
+  school_id: uuid!
+  id: uuid
+  package_code: String
+  is_enabled: Boolean
+}
+
+type ManageSchoolRegistrationPackageOutput {
+  deleted: Boolean!
+  id: uuid
+  school_id: uuid!
+  package_code: String
+  is_enabled: Boolean
+}
+
+input UpdateEnrollmentSectionInput {
+  enrollment_id: uuid!
+  section_id: uuid
+  slot_id: uuid
+  unassign: Boolean
+  allow_over_capacity: Boolean
+}
+
+type UpdateEnrollmentSectionOutput {
+  enrollment_id: uuid!
+  section_id: uuid
+  warning: String
+}
+
+input ManageTeacherInput {
+  education_level: String
+  field_of_study: String
+  academic_background: String
+  years_of_experience: Int
+  teaching_license_number: String
+  employment_type: String
+}
+
+type ManageTeacherOutput {
+  education_level: String
+  field_of_study: String
+  academic_background: String
+  years_of_experience: Int
+  teaching_license_number: String
+  employment_type: String
+}
+
+input ManageUserInput {
+  is_delete: Boolean!
+  school_id: uuid
+  branch_id: uuid
+  id: uuid
+  role_id: uuid
+  scope_type: String
+  scope_branch_id: uuid
+  first_name: String
+  middle_name: String
+  last_name: String
+  email: String
+  phone: String
+  password: String
+  employee_code: String
+  job_title: String
+  hired_on: date
+  status: String
+  teacher: ManageTeacherInput
+}
+
+type ManageUserOutput {
+  deleted: Boolean!
+  id: uuid
+  user_id: uuid
+  school_id: uuid
+  branch_id: uuid
+  role_id: uuid
+  scope_type: String
+  scope_branch_id: uuid
+  first_name: String
+  middle_name: String
+  last_name: String
+  email: String
+  phone: String
+  employee_code: String
+  job_title: String
+  hired_on: date
+  status: String
+  teacher: ManageTeacherOutput
+}

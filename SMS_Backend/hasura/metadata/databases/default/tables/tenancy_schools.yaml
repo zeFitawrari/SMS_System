@@ -1,0 +1,137 @@
+table:
+  name: schools
+  schema: tenancy
+configuration:
+  column_config: {}
+  custom_column_names: {}
+  custom_name: schools
+  custom_root_fields:
+    select: schools
+    select_by_pk: school
+    select_aggregate: schools_aggregate
+    insert: insert_schools
+    insert_one: insert_school
+    update: update_schools
+    update_by_pk: update_school
+    delete: delete_schools
+    delete_by_pk: delete_school
+array_relationships:
+  - name: branches
+    using:
+      foreign_key_constraint_on:
+        column: school_id
+        table:
+          name: branches
+          schema: tenancy
+select_permissions:
+  - role: SCHOOL_OWNER
+    permission:
+      columns:
+        - id
+        - name
+        - slug
+        - address
+        - latitude
+        - longitude
+        - status
+        - created_at
+        - updated_at
+      filter:
+        id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SCHOOL_ADMIN
+    permission:
+      columns:
+        - id
+        - name
+        - slug
+        - address
+        - latitude
+        - longitude
+        - status
+        - created_at
+        - updated_at
+      filter:
+        id:
+          _eq: X-Hasura-School-Id
+      allow_aggregations: true
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - name
+        - slug
+        - address
+        - latitude
+        - longitude
+        - status
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - id
+        - name
+        - slug
+        - address
+        - latitude
+        - longitude
+        - status
+        - created_at
+        - updated_at
+      filter: {}
+      allow_aggregations: true
+insert_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      check: {}
+      columns:
+        - name
+        - slug
+        - address
+        - latitude
+        - longitude
+        - status
+  - role: PROVIDER_ADMIN
+    permission:
+      check: {}
+      columns:
+        - name
+        - slug
+        - address
+        - latitude
+        - longitude
+        - status
+update_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      columns:
+        - name
+        - slug
+        - address
+        - latitude
+        - longitude
+        - status
+      filter: {}
+      check: {}
+  - role: PROVIDER_ADMIN
+    permission:
+      columns:
+        - name
+        - slug
+        - address
+        - latitude
+        - longitude
+        - status
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: SUPER_PROVIDER_ADMIN
+    permission:
+      filter: {}
+  - role: PROVIDER_ADMIN
+    permission:
+      filter: {}
